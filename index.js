@@ -24,13 +24,29 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    const piccollections = client.db("toyhub").collection("gallery")
+    const piccollections = client.db("toyhub").collection("gallery");
+    const toysCollection = client.db("toyhub").collection("toys");
     // gallery section
-    app.get("/gallery", async(req, res)=>{
-        const cursor = piccollections.find()
+    app.get("/gallery", async (req, res) => {
+      const cursor = piccollections.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // add toys section
+    app.get("/toys", async (req, res)=>{
+        console.log(req.query)
+        const cursor = toysCollection.find()
         const result = await cursor.toArray()
         res.send(result)
     })
+
+    app.post("/toys", async (req, res) => {
+      const toyData = req.body;
+      console.log(toyData);
+      const result = await toysCollection.insertOne(toyData);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
