@@ -9,8 +9,7 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-const uri =
-  "mongodb+srv://Assignment-11:1qh5N8Ve3OVHDEVh@wahiddatabase1.1tmbx62.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@wahiddatabase1.1tmbx62.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
