@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.meta || 4000;
 // dotenv
 require("dotenv").config();
@@ -34,7 +34,6 @@ async function run() {
     });
     // add toys section
     app.get("/toys", async (req, res) => {
-      console.log(req.query.email);
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
@@ -44,11 +43,24 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/toys/:id", async(req, res)=>{
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await toysCollection.findOne(query)
+      res.send(result)
+    })
+
     app.post("/toys", async (req, res) => {
       const toyData = req.body;
-      console.log(toyData);
       const result = await toysCollection.insertOne(toyData);
       res.send(result);
+    });
+
+    app.delete("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toysCollection.deleteOne(query)
+      res.send(result)
     });
 
     // Send a ping to confirm a successful connection
