@@ -33,12 +33,16 @@ async function run() {
       res.send(result);
     });
     // add toys section
-    app.get("/toys", async (req, res)=>{
-        console.log(req.query)
-        const cursor = toysCollection.find()
-        const result = await cursor.toArray()
-        res.send(result)
-    })
+    app.get("/toys", async (req, res) => {
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const cursor = toysCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     app.post("/toys", async (req, res) => {
       const toyData = req.body;
