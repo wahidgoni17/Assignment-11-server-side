@@ -43,12 +43,12 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/toys/:id", async(req, res)=>{
-      const id = req.params.id
-      const query = {_id: new ObjectId(id)}
-      const result = await toysCollection.findOne(query)
-      res.send(result)
-    })
+    app.get("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toysCollection.findOne(query);
+      res.send(result);
+    });
 
     app.post("/toys", async (req, res) => {
       const toyData = req.body;
@@ -56,11 +56,29 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = req.body
+      const toyUpdate = {
+        $set: {
+          toyName: updatedInfo.toyName,
+          subCatagory: updatedInfo.subCatagory,
+          price: updatedInfo.price,
+          quantity: updatedInfo.quantity,
+          details: updatedInfo.details
+        }
+      }
+      const result = await toysCollection.updateOne(filter, toyUpdate, options)
+      res.send(result)
+    });
+
     app.delete("/toys/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await toysCollection.deleteOne(query)
-      res.send(result)
+      const result = await toysCollection.deleteOne(query);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
